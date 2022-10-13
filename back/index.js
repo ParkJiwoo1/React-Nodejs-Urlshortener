@@ -51,7 +51,7 @@ app.post("/api/refresh", (req, res) => {
 
 const generateAccessToken = (user) => {
   return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, "tokenKey", {
-    expiresIn: "5s",
+    expiresIn: "1h",
   });
 };
 const generateRefreshToken = (user) => {
