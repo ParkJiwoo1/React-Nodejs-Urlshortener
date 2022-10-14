@@ -2,7 +2,8 @@ import { useRef, useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../api/useAuth";
-
+import { useCookies } from "react-cookie";
+import { setCookie } from "../api/Cookie";
 const LOGIN_URL = "/login";
 function Login() {
   const { auth, setAuth } = useAuth();
@@ -14,6 +15,7 @@ function Login() {
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState(false);
+  const [cookies, setCookie] = useCookies(["mail"]);
 
   const location = useLocation();
   const from = location?.state?.from?.pathname || "/";
@@ -24,6 +26,9 @@ function Login() {
   useEffect(() => {
     setErrMsg("");
   }, [mail, pwd]);
+  useEffect(() => {
+    authCheck();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,11 +44,12 @@ function Login() {
       console.log(JSON.stringify(response?.data));
       const accessToken = response?.data?.accessToken;
       setAuth({ mail, pwd, accessToken });
+      setCookie(mail, response.data.accessToken);
       setMail("");
       setPwd("");
       setSuccess(true);
       navigate(from, { replace: true });
-      console.log(response);
+      console.log(cookies);
       if (response.status === 200) navigate("/");
     } catch (err) {
       if (!err?.responose) {
@@ -58,6 +64,18 @@ function Login() {
       console.log(errMsg);
       //errRef.current.focus();
     }
+  };
+
+  const authCheck = () => {
+    const token = cookies.mail;
+    axios
+      .post("/login/refresh", { token: token })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch(() => {
+        console.log("refresh fail");
+      });
   };
   return (
     <>

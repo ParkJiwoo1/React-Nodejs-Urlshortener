@@ -14,11 +14,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route element={<RequireAuth />}>
-            <Route element={<PersistLogin />}>
-              <Route path="/" element={<Home />} />
-              <Route paht="/Users" element={<Users />} />
-            </Route>
+            {/* <Route element={<PersistLogin />}> */}
+            <Route path="/" element={<Home />} />
+            <Route paht="/Users" element={<Users />} />
           </Route>
+          {/* </Route> */}
           <Route path="/Register" element={<Register />} />
           <Route path="/Login" element={<Login />} />
         </Route>

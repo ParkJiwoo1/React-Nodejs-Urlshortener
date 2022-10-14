@@ -4,13 +4,16 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./api/AuthProvider";
+import { CookiesProvider } from "react-cookie";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <CookiesProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </CookiesProvider>
   </BrowserRouter>
 );
 
